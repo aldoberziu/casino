@@ -20,8 +20,8 @@ export default function Home() {
       </Head>
       <div className={styles.wrapper}>
         <Header />
-        <Gameplay game={game}/>
         <Sidebar selectedGame={selectedGame}/>
+        <Gameplay game={game}/>
       </div>
     </>
   );

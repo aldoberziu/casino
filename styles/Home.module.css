@@ -1,9 +1,12 @@
 .wrapper{
-  position: relative;
-  padding: 0;
-  margin: 0;
   background-color: #d8caa1;
   height: 100vh;
   display: flex;
   flex-direction: column;
+}
+@media screen and (max-width: 768px) {
+  .wrapper{
+    width: auto;
+    height: 100vh;
+  }
 }

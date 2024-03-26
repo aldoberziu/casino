@@ -1,6 +1,8 @@
+import styles from './Blackjack.module.css'
+
 const Blackjack = () => {
   return ( 
-    <div>
+    <div className={styles.wrapper}>
       <p>blackjacku</p>
     </div>
    );

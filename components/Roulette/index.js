@@ -1,6 +1,8 @@
+import styles from './Roulette.module.css'
+
 const Roulette = () => {
   return ( 
-    <div>
+    <div className={styles.wrapper}>
       <p>ruleta</p>
     </div>
    );

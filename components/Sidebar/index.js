@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import styles from "./Sidebar.module.css";
 
 const Sidebar = (props) => {
-  const [game, setGame] = useState("roulette");
+  const [game, setGame] = useState("home");
 
   useEffect(() => {
     props?.selectedGame?.(game);
@@ -10,9 +10,9 @@ const Sidebar = (props) => {
   
   return (
     <div className={styles.sidebar}>
+      <p onClick={() => setGame("home")}>Home</p>
       <p onClick={() => setGame("roulette")}>Ruleta</p>
       <p onClick={() => setGame("blackjack")}>Blackjacku</p>
-      <p onClick={() => setGame("murlan")}>Murlani</p>
     </div>
   );
 };
