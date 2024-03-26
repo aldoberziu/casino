@@ -1,0 +1,18 @@
+.gameplay{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #cae1ff;
+  border: 10px solid #ad180a;
+  width: 500px;
+  height: 400px;
+  border-radius: 30px;
+}
+.input{
+  margin: auto;
+  height: 35px;
+  width: 85%;
+  outline: none;
+
+}
