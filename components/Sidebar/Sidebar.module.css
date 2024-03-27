@@ -24,4 +24,8 @@
     justify-content: space-around;
     padding: 10px
   }
+  .sidebar p:hover{
+    margin-left: 0;
+    transition: none;
+  }
 }

@@ -1,0 +1,30 @@
+.wrapper{
+  display: block;
+  background-color: #5e6c80;
+  width: 80%;
+  margin: 10px auto;
+  border-radius: 10px;
+}
+.container{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 5px 15px 15px 20px;
+}
+.wrapper .casinoName{
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+}
+.wrapper .text{
+  color: white;
+}
+.green{
+  border-left: 5px solid green;
+}
+.red{
+  border-left: 5px solid red;
+}
+.general{
+  border-left: 5px solid yellow;
+}
