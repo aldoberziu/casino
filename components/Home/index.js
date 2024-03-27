@@ -8,6 +8,9 @@ import Message from "../Message";
 const Home = () => {
   const sendBtn = useRef();
   const chatWindow = useRef();
+  const inputRef = useRef();
+
+  const [scrollDisabled, setScrollDisabled] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([{ type: "", message: "" }]);
   const [displayMessage, setDisplayMessage] = useState(true);
@@ -23,6 +26,13 @@ const Home = () => {
   const getRandomMessage = (array) => {
     const randomIndex = Math.floor(Math.random() * array.length);
     return array[randomIndex];
+  };
+  const handleInputFocus = () => {
+    setScrollDisabled(true);
+  };
+
+  const handleInputBlur = () => {
+    setScrollDisabled(false);
   };
   useEffect(() => {
     setTotalBalance(cashBalance + bankBalance);
@@ -113,7 +123,7 @@ const Home = () => {
   }, [messages]);
 
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} style={{ overflowY: scrollDisabled ? "hidden" : "auto" }}>
       {displayMessage && (
         <div className={styles.chatMessages}>
           {messages.map((el) => (
@@ -129,6 +139,8 @@ const Home = () => {
           onChange={(e) => {
             setInput(e.target.value);
           }}
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
           onKeyDown={handleEnter}
         />
         <div
