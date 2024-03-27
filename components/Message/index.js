@@ -20,7 +20,10 @@ const Message = ({ data }) => {
       >
         <div className={styles.container}>
           <div className={styles.username}>
-            {data.type !== "message" ? <p>Casino Tajvani ✔️</p> : <p>user_name</p>}
+            <p>{data.type !== "message" ? "Casino Tajvani ✔️" : "user_name"}</p>
+            <p className={styles.action}>
+              used<span>{data.action !== "" ? `${data.action}` : ""}</span>
+            </p>
           </div>
           <div className={styles.text}>
             <p>{data.message}</p>

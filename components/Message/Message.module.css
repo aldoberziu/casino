@@ -9,31 +9,43 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-left: 5px;
+  margin-left: 4px;
   background-color: #5e6c80;
   padding: 5px 15px 15px 20px;
   border-radius: 0px 10px 10px 0px;
 }
-.wrapper .username {
+.username {
+  display: flex;
   font-size: 14px;
   font-weight: 600;
   color: white;
 }
-.wrapper .text {
+.username .action{
+  display: flex;
+  align-items: center;
+  font-size: 10px;
+  padding-left: 5px;
+}
+.action span{
+  color: #94aefb;
+  padding-left: 2px;
+}
+.text {
   color: white;
   white-space: pre-line;
+  overflow-wrap: break-word;
 }
 .green {
-  background-color: green;
+  background-color: #016D29;
 }
 .red {
-  background-color: red;
+  background-color: #E0080B;
 }
 .bot {
-  background-color: yellow;
+  background-color: #F3C620;
 }
 .error{
-  border: 2px solid red;
+  border: 2px solid #E0080B;
   background-color: #5e6c80;
 }
 .message{

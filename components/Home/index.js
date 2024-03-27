@@ -10,9 +10,8 @@ const Home = () => {
   const chatWindow = useRef();
   const inputRef = useRef();
 
-  const [scrollDisabled, setScrollDisabled] = useState(false);
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState([{ type: "", message: "" }]);
+  const [messages, setMessages] = useState([{ type: "", message: "", action: "" }]);
   const [displayMessage, setDisplayMessage] = useState(true);
   const [bankBalance, setBankBalance] = useState(0);
   const [cashBalance, setCashBalance] = useState(0);
@@ -26,13 +25,6 @@ const Home = () => {
   const getRandomMessage = (array) => {
     const randomIndex = Math.floor(Math.random() * array.length);
     return array[randomIndex];
-  };
-  const handleInputFocus = () => {
-    setScrollDisabled(true);
-  };
-
-  const handleInputBlur = () => {
-    setScrollDisabled(false);
   };
   useEffect(() => {
     setTotalBalance(cashBalance + bankBalance);
@@ -51,7 +43,7 @@ const Home = () => {
           setCashBalance(cashBalance + workMoney);
           let randomWork = getRandomMessage(works);
           const message = randomWork.replace("{}", workMoney);
-          setMessages((state) => [...state, { type: "green", message: message }]);
+          setMessages((state) => [...state, { type: "green", message: message, action: "/work" }]);
           break;
         case "!slut":
           const action = Math.random();
@@ -60,13 +52,16 @@ const Home = () => {
             setCashBalance(cashBalance + slutMoney);
             let randomSlut = getRandomMessage(niceSluts);
             const message = randomSlut.replace("{}", slutMoney);
-            setMessages((state) => [...state, { type: "green", message: message }]);
+            setMessages((state) => [
+              ...state,
+              { type: "green", message: message, action: "/slut" },
+            ]);
           } else {
             const slutMoney = getRandomNumber(1, 2500);
             setCashBalance(cashBalance - slutMoney);
             let randomSlut = getRandomMessage(badSluts);
             const message = randomSlut.replace("{}", slutMoney);
-            setMessages((state) => [...state, { type: "red", message: message }]);
+            setMessages((state) => [...state, { type: "red", message: message, action: "/slut" }]);
           }
           break;
         case "!bal":
@@ -75,6 +70,7 @@ const Home = () => {
             {
               type: "bot",
               message: `Cash Balance: ${cashBalance}.\nBank Balance: ${bankBalance}.\nTotal Balance: ${totalBalance}`,
+              action: "/balance",
             },
           ]);
           break;
@@ -84,34 +80,70 @@ const Home = () => {
     }
     if (input.startsWith("!dep")) {
       switch (input) {
-        case "!dep all":
-          setBankBalance(bankBalance + cashBalance);
-          setMessages((state) => [
-            ...state,
-            { type: "bot", message: `Successfully deposited ${cashBalance} to your bank!` },
-          ]);
-          setCashBalance(0);
-          break;
         case "!dep":
+        case "!deposit":
           setMessages((state) => [
             ...state,
-            { type: "error", message: "Invalid number or arguments. Use !dep <amount>" },
+            {
+              type: "error",
+              message: "Invalid number or arguments. Use !dep <amount>",
+              action: "/deposit",
+            },
           ]);
+          break;
+        case "!dep all":
+        case "!deposit all":
+          if (cashBalance === 0 || cashBalance < 0) {
+            setMessages((state) => [
+              ...state,
+              {
+                type: "bot",
+                message: `There was no money in cash to deposit. Currently you have ${cashBalance}`,
+                action: "/deposit",
+              },
+            ]);
+          } else {
+            setBankBalance(bankBalance + cashBalance);
+            setMessages((state) => [
+              ...state,
+              {
+                type: "bot",
+                message: `Successfully deposited ${cashBalance} to your bank!`,
+                action: "/deposit",
+              },
+            ]);
+            setCashBalance(0);
+          }
+          break;
         default:
           const coins = input.replace(/\D/g, "");
-          if (coins > cashBalance) {
+          if (coins === "") {
+            setMessages((state) => [
+              ...state,
+              {
+                type: "error",
+                message: "Invalid arguments. Use !dep <amount>",
+                action: "/deposit",
+              },
+            ]);
+          } else if (coins > cashBalance) {
             setMessages((state) => [
               ...state,
               {
                 type: "error",
                 message: `You cannot deposit more than you have in cash! Currently you have ${cashBalance}`,
+                action: "/deposit",
               },
             ]);
           } else {
             setBankBalance(bankBalance + parseInt(coins));
             setMessages((state) => [
               ...state,
-              { type: "bot", message: `Successfully deposited ${coins} to your bank!` },
+              {
+                type: "bot",
+                message: `Successfully deposited ${coins} to your bank!`,
+                action: "/deposit",
+              },
             ]);
             setCashBalance(cashBalance - coins);
           }
@@ -123,7 +155,7 @@ const Home = () => {
   }, [messages]);
 
   return (
-    <div className={styles.wrapper} style={{ overflowY: scrollDisabled ? "hidden" : "auto" }}>
+    <div className={styles.wrapper}>
       {displayMessage && (
         <div className={styles.chatMessages}>
           {messages.map((el) => (
@@ -139,8 +171,6 @@ const Home = () => {
           onChange={(e) => {
             setInput(e.target.value);
           }}
-          onFocus={handleInputFocus}
-          onBlur={handleInputBlur}
           onKeyDown={handleEnter}
         />
         <div
