@@ -1,30 +1,41 @@
-.wrapper{
+.wrapper {
   display: block;
-  background-color: #5e6c80;
   width: 80%;
   margin: 10px auto;
   border-radius: 10px;
+  overflow: hidden;
 }
-.container{
+.container {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-left: 5px;
+  background-color: #5e6c80;
   padding: 5px 15px 15px 20px;
+  border-radius: 0px 10px 10px 0px;
 }
-.wrapper .casinoName{
+.wrapper .username {
   font-size: 14px;
   font-weight: 600;
   color: white;
 }
-.wrapper .text{
+.wrapper .text {
   color: white;
+  white-space: pre-line;
 }
-.green{
-  border-left: 5px solid green;
+.green {
+  background-color: green;
 }
-.red{
-  border-left: 5px solid red;
+.red {
+  background-color: red;
 }
-.general{
-  border-left: 5px solid yellow;
+.bot {
+  background-color: yellow;
+}
+.error{
+  border: 2px solid red;
+  background-color: #5e6c80;
+}
+.message{
+  background-color: #5e6c80;
 }
