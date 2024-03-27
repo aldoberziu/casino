@@ -17,12 +17,16 @@ export const niceSluts = [
 export const badSluts = [
   "Se qan fare gojoren. Tkan denu me {}🥮 gjob.",
   "U anku klienti e kishe shum t gjer. -{}🥮.",
+  "E bone me zor me nji gjyshe edhe hongre gjob {}🥮",
+  "U kape duke masturbu n publik. {}🥮 per me shpetu prej shtetit."
 ];
 export const niceCrimes = [
   "I qive ropt ma t bukrit. {}🥮",
-  "I vodhe 2 thasa raiffeisenit. I punofsh me shnet {}🥮 (fsh raiffeisenin)",
+  "E myte sot me cunat. Na {}🥮 je ma i miri",
+  "I vodhe 2 thasa raiffeisenit. I punofsh me shnet {}🥮 (fsha raiffeisenin)",
 ];
 export const badCrimes = [
   "Ashu bohet krimi mer kar? U kape dhe u gjobite me {}🥮.",
   "T'zu shteti tu vjedh lepirse imilekobur. {}🥮 gjoba.",
+  "Tkan kap kamerat tu pshurr ke lana. -{}🥮 "
 ];
