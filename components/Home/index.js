@@ -14,10 +14,9 @@ const Home = () => {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([{ type: "", message: "", action: "" }]);
   const [displayMessage, setDisplayMessage] = useState(true);
-  const [bankBalance, setBankBalance] = useState(0);
-  const [cashBalance, setCashBalance] = useState(0);
-  const [totalBalance, setTotalBalance] = useState(0);
-  const [workTimer, setWorkTimer] = useState(false);
+  const [balance, setBalance] = useState({ cash: 0, bank: 0, total: 0 });
+  const [workTimer, setWorkTimer] = useState({ time: 0, timer: false });
+  // const [workTimer, setWorkTimer] = useState(false);
   const [workSeconds, setWorkSeconds] = useState(0);
   const [slutTimer, setSlutTimer] = useState(false);
   const [slutSeconds, setSlutSeconds] = useState(0);
@@ -32,34 +31,35 @@ const Home = () => {
     return array[randomIndex];
   };
   useEffect(() => {
-    setTotalBalance(cashBalance + bankBalance);
-  }, [bankBalance, cashBalance]);
+    setBalance({ ...balance, total: balance.cash + balance.bank });
+  }, [balance.cash, balance.bank]);
 
   const handleEnter = (e) => {
     if (e.key === "Enter") {
       sendBtn.current.click();
     }
   };
-  const handleWorkTimer = (seconds) => {
-    setWorkSeconds(seconds);
+  const handleWorkTime = (seconds) => {
+    setWorkTimer({ ...workTimer, time: seconds });
+  };
+  const childWorkTimer = (value) => {
+    setWorkTimer({ ...workTimer, timer: value });
   };
   const handleSlutTimer = (seconds) => {
     setSlutSeconds(seconds);
   };
-  const childWorkTimer = (value) => {
-    setWorkTimer(value);
-  };
   const childSlutTimer = (value) => {
+    console.log(value);
     setSlutTimer(value);
   };
   const handleSubmit = () => {
     if (input.startsWith("!")) {
       switch (input) {
         case "!work":
-          if (!workTimer) {
-            setWorkTimer(true);
+          if (!workTimer.timer) {
+            setWorkTimer({ ...workTimer, timer: true });
             const workMoney = getRandomNumber(1, 1000);
-            setCashBalance(cashBalance + workMoney);
+            setBalance({ ...balance, cash: balance.cash + workMoney });
             let randomWork = getRandomMessage(works);
             const message = randomWork.replace("{}", workMoney);
             setMessages((state) => [
@@ -71,7 +71,7 @@ const Home = () => {
               ...state,
               {
                 type: "error",
-                message: `You can work again in ${workSeconds} seconds.`,
+                message: `You can work again in ${workTimer.time} seconds.`,
                 action: "/work",
               },
             ]);
@@ -83,7 +83,7 @@ const Home = () => {
             const slutAction = Math.random();
             if (slutAction > 0.5) {
               const slutMoney = getRandomNumber(1, 2500);
-              setCashBalance(cashBalance + slutMoney);
+              setBalance({ ...balance, cash: balance.cash + slutMoney });
               let randomSlut = getRandomMessage(niceSluts);
               const message = randomSlut.replace("{}", slutMoney);
               setMessages((state) => [
@@ -92,7 +92,7 @@ const Home = () => {
               ]);
             } else {
               const slutFine = getRandomNumber(1, 2500);
-              setCashBalance(cashBalance - slutFine);
+              setBalance({ ...balance, cash: balance.cash - slutFine });
               let randomSlut = getRandomMessage(badSluts);
               const message = randomSlut.replace("{}", slutFine);
               setMessages((state) => [
@@ -115,7 +115,7 @@ const Home = () => {
           const crimeAction = Math.random();
           if (crimeAction > 0.5) {
             const crimeMoney = getRandomNumber(1, 2500);
-            setCashBalance(cashBalance + crimeMoney);
+            setBalance({ ...balance, cash: balance.cash + crimeMoney });
             let randomCrime = getRandomMessage(niceCrimes);
             const message = randomCrime.replace("{}", crimeMoney);
             setMessages((state) => [
@@ -124,7 +124,7 @@ const Home = () => {
             ]);
           } else {
             const crimeFine = getRandomNumber(1, 2500);
-            setCashBalance(cashBalance - crimeFine);
+            setBalance({ ...balance, cash: balance.cash - crimeFine });
             let randomCrime = getRandomMessage(badCrimes);
             const message = randomCrime.replace("{}", crimeFine);
             setMessages((state) => [...state, { type: "red", message: message, action: "/crime" }]);
@@ -135,7 +135,7 @@ const Home = () => {
             ...state,
             {
               type: "bot",
-              message: `Cash Balance: ${cashBalance}.\nBank Balance: ${bankBalance}.\nTotal Balance: ${totalBalance}`,
+              message: `Cash Balance: ${balance.cash}.\nBank Balance: ${balance.bank}.\nTotal Balance: ${balance.total}`,
               action: "/balance",
             },
           ]);
@@ -159,26 +159,26 @@ const Home = () => {
           break;
         case "!dep all":
         case "!deposit all":
-          if (cashBalance === 0 || cashBalance < 0) {
+          if (balance.cash <= 0) {
             setMessages((state) => [
               ...state,
               {
                 type: "bot",
-                message: `There was no money in cash to deposit. Currently you have ${cashBalance}`,
+                message: `There was no money in cash to deposit. Currently you have ${balance.cash}`,
                 action: "/deposit",
               },
             ]);
           } else {
-            setBankBalance(bankBalance + cashBalance);
+            setBalance({ ...balance, bank: balance.bank + balance.cash });
             setMessages((state) => [
               ...state,
               {
                 type: "bot",
-                message: `Successfully deposited ${cashBalance} to your bank!`,
+                message: `Successfully deposited ${balance.cash} to your bank!`,
                 action: "/deposit",
               },
             ]);
-            setCashBalance(0);
+            setBalance({ ...balance, cash: 0 });
           }
           break;
         default:
@@ -192,17 +192,17 @@ const Home = () => {
                 action: "/deposit",
               },
             ]);
-          } else if (coins > cashBalance) {
+          } else if (coins > balance.cash) {
             setMessages((state) => [
               ...state,
               {
                 type: "error",
-                message: `You cannot deposit more than you have in cash! Currently you have ${cashBalance}`,
+                message: `You cannot deposit more than you have in cash! Currently you have ${balance.cash}`,
                 action: "/deposit",
               },
             ]);
           } else {
-            setBankBalance(bankBalance + parseInt(coins));
+            setBalance({ ...balance, bank: balance.bank + parseInt(coins) });
             setMessages((state) => [
               ...state,
               {
@@ -211,7 +211,7 @@ const Home = () => {
                 action: "/deposit",
               },
             ]);
-            setCashBalance(cashBalance - coins);
+            setBalance({ ...balance, cash: 0 });
           }
       }
     }
@@ -231,9 +231,9 @@ const Home = () => {
         </div>
       )}
       <CountdownTimer
-        handleTimer={handleWorkTimer}
+        handleTimer={handleWorkTime}
         time={60}
-        timer={workTimer}
+        timer={workTimer.timer}
         childTimer={childWorkTimer}
       />
       <CountdownTimer
