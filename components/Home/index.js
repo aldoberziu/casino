@@ -269,7 +269,7 @@ const Home = () => {
       />
       <CountdownTimer
         handleTimer={handleSlutTimer}
-        time={63}
+        time={60}
         timer={slutTimer.timer}
         childTimer={childSlutTimer}
       />
