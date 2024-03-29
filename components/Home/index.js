@@ -16,10 +16,8 @@ const Home = () => {
   const [displayMessage, setDisplayMessage] = useState(true);
   const [balance, setBalance] = useState({ cash: 0, bank: 0, total: 0 });
   const [workTimer, setWorkTimer] = useState({ time: 0, timer: false });
-  // const [workTimer, setWorkTimer] = useState(false);
-  const [workSeconds, setWorkSeconds] = useState(0);
-  const [slutTimer, setSlutTimer] = useState(false);
-  const [slutSeconds, setSlutSeconds] = useState(0);
+  const [slutTimer, setSlutTimer] = useState({ time: 0, timer: false });
+  const [crimeTimer, setCrimeTimer] = useState({ time: 0, timer: false });
 
   const getRandomNumber = (min, max) => {
     const randomDecimal = Math.random();
@@ -29,6 +27,19 @@ const Home = () => {
   const getRandomMessage = (array) => {
     const randomIndex = Math.floor(Math.random() * array.length);
     return array[randomIndex];
+  };
+  const secondsToTime = (data) => {
+    const minutes = Math.floor(data / 60);
+    const seconds = data - minutes * 60;
+    if (minutes > 0) {
+      return `${minutes} minute${minutes > 1 ? "s" : ""}${
+        seconds === 0 ? "" : ` and ${seconds} second${seconds > 1 ? "s" : ""}`
+      }`;
+    } else {
+      if (seconds > 0) {
+        return `${seconds} second${seconds > 1 ? "s" : ""}`;
+      }
+    }
   };
   useEffect(() => {
     setBalance({ ...balance, total: balance.cash + balance.bank });
@@ -46,11 +57,16 @@ const Home = () => {
     setWorkTimer({ ...workTimer, timer: value });
   };
   const handleSlutTimer = (seconds) => {
-    setSlutSeconds(seconds);
+    setSlutTimer({ ...slutTimer, time: seconds });
   };
   const childSlutTimer = (value) => {
-    console.log(value);
-    setSlutTimer(value);
+    setSlutTimer({ ...slutTimer, timer: value });
+  };
+  const handleCrimeTimer = (seconds) => {
+    setCrimeTimer({ ...crimeTimer, time: seconds });
+  };
+  const childCrimeTimer = (value) => {
+    setCrimeTimer({ ...crimeTimer, timer: value });
   };
   const handleSubmit = () => {
     if (input.startsWith("!")) {
@@ -71,15 +87,15 @@ const Home = () => {
               ...state,
               {
                 type: "error",
-                message: `You can work again in ${workTimer.time} seconds.`,
+                message: `You can work again in ${secondsToTime(workTimer.time)}.`,
                 action: "/work",
               },
             ]);
           }
           break;
         case "!slut":
-          if (!slutTimer) {
-            setSlutTimer(true);
+          if (!slutTimer.timer) {
+            setSlutTimer({ ...slutTimer, timer: true });
             const slutAction = Math.random();
             if (slutAction > 0.5) {
               const slutMoney = getRandomNumber(1, 2500);
@@ -105,29 +121,44 @@ const Home = () => {
               ...state,
               {
                 type: "error",
-                message: `You can be a slut in ${slutSeconds} seconds.`,
+                message: `You can be a slut in ${secondsToTime(slutTimer.time)}.`,
                 action: "/slut",
               },
             ]);
           }
           break;
         case "!crime":
-          const crimeAction = Math.random();
-          if (crimeAction > 0.5) {
-            const crimeMoney = getRandomNumber(1, 2500);
-            setBalance({ ...balance, cash: balance.cash + crimeMoney });
-            let randomCrime = getRandomMessage(niceCrimes);
-            const message = randomCrime.replace("{}", crimeMoney);
+          if (!crimeTimer.timer) {
+            setCrimeTimer({ ...crimeTimer, timer: true });
+            const crimeAction = Math.random();
+            if (crimeAction > 0.5) {
+              const crimeMoney = getRandomNumber(1, 2500);
+              setBalance({ ...balance, cash: balance.cash + crimeMoney });
+              let randomCrime = getRandomMessage(niceCrimes);
+              const message = randomCrime.replace("{}", crimeMoney);
+              setMessages((state) => [
+                ...state,
+                { type: "green", message: message, action: "/crime" },
+              ]);
+            } else {
+              const crimeFine = getRandomNumber(1, 2500);
+              setBalance({ ...balance, cash: balance.cash - crimeFine });
+              let randomCrime = getRandomMessage(badCrimes);
+              const message = randomCrime.replace("{}", crimeFine);
+              setMessages((state) => [
+                ...state,
+                { type: "red", message: message, action: "/crime" },
+              ]);
+            }
+          } else {
             setMessages((state) => [
               ...state,
-              { type: "green", message: message, action: "/crime" },
+              {
+                type: "error",
+                message: `You can commit a crime in ${secondsToTime(crimeTimer.time)}.`,
+                action: "/crime",
+              },
             ]);
-          } else {
-            const crimeFine = getRandomNumber(1, 2500);
-            setBalance({ ...balance, cash: balance.cash - crimeFine });
-            let randomCrime = getRandomMessage(badCrimes);
-            const message = randomCrime.replace("{}", crimeFine);
-            setMessages((state) => [...state, { type: "red", message: message, action: "/crime" }]);
           }
           break;
         case "!bal":
@@ -238,9 +269,15 @@ const Home = () => {
       />
       <CountdownTimer
         handleTimer={handleSlutTimer}
-        time={60}
-        timer={slutTimer}
+        time={63}
+        timer={slutTimer.timer}
         childTimer={childSlutTimer}
+      />
+      <CountdownTimer
+        handleTimer={handleCrimeTimer}
+        time={120}
+        timer={crimeTimer.timer}
+        childTimer={childCrimeTimer}
       />
       <div className={styles.inputSection}>
         <input
