@@ -5,6 +5,7 @@ import Image from "next/image";
 import { works, niceSluts, badSluts, niceCrimes, badCrimes } from "@/Constants";
 import Message from "../Message";
 import CountdownTimer from "../Countdown";
+import { BrowserView, MobileView } from "react-device-detect";
 
 const Home = () => {
   const sendBtn = useRef();
@@ -248,17 +249,22 @@ const Home = () => {
     }
   };
   useEffect(() => {
-    chatWindow.current.scrollIntoView({ behavior: "smooth" });
+    chatWindow.current.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
   }, [messages]);
 
   return (
     <div className={styles.wrapper}>
       {displayMessage && (
         <div className={styles.chatMessages}>
+          {/* <MobileView>
+            <div ref={chatWindow}></div>
+          </MobileView> */}
           {messages.map((el) => (
             <Message data={el} />
           ))}
+          {/* <BrowserView> */}
           <div ref={chatWindow}></div>
+          {/* </BrowserView> */}
         </div>
       )}
       <CountdownTimer
@@ -284,8 +290,10 @@ const Home = () => {
           type="text"
           value={input}
           onChange={(e) => {
+            e.preventDefault();
             setInput(e.target.value);
           }}
+          onClick={(e) => e.preventDefault()}
           onKeyDown={handleEnter}
         />
         <div

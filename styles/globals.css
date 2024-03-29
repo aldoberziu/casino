@@ -6,8 +6,8 @@
   font-family: 'gg sans Normal', sans-serif;
   user-select: none;
 }
-@media screen and (max-width: 768px) {
+/* @media screen and (max-width: 768px) {
   *{
     overflow-y: hidden;
   }
-}
+} */
