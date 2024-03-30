@@ -14,7 +14,7 @@ const Gameplay = ({ game }) => {
   return (
     <div
       className={styles.gameplay}
-      style={keyboardActive && windowViewport[0] > 768 ? { height: windowViewport[1] } : {}}
+      style={keyboardActive && windowViewport[0] < 768 ? { height: windowViewport[1] } : {}}
     >
       {game === "home" && <Home inputFocus={handleInputFocus} />}
       {game === "roulette" && <Roulette />}
