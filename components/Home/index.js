@@ -5,7 +5,7 @@ import Image from "next/image";
 import { works, niceSluts, badSluts, niceCrimes, badCrimes } from "@/Constants";
 import Message from "../Message";
 import CountdownTimer from "../Countdown";
-import { BrowserView, MobileView } from "react-device-detect";
+import KeyboardDetector from "../KeyboardDetector";
 
 const Home = () => {
   const sendBtn = useRef();
@@ -256,17 +256,13 @@ const Home = () => {
     <div className={styles.wrapper}>
       {displayMessage && (
         <div className={styles.chatMessages}>
-          {/* <MobileView>
-            <div ref={chatWindow}></div>
-          </MobileView> */}
           {messages.map((el) => (
             <Message data={el} />
           ))}
-          {/* <BrowserView> */}
           <div ref={chatWindow}></div>
-          {/* </BrowserView> */}
         </div>
       )}
+      <KeyboardDetector />
       <CountdownTimer
         handleTimer={handleWorkTime}
         time={60}
