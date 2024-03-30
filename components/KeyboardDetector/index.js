@@ -17,7 +17,7 @@ function useKeyboardDetection() {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [window.innerHeight]);
 
   return isKeyboardOpened;
 }
