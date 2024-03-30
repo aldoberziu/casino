@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-function MyComponent() {
+function getWindowHeight() {
   const [windowHeight, setWindowHeight] = useState(undefined);
 
   useEffect(() => {
@@ -18,12 +18,7 @@ function MyComponent() {
     }
   }, [windowHeight]);
 
-  return (
-    <div>
-      {typeof windowHeight !== "undefined" && <p>Window Height: {windowHeight}</p>}
-      {/* Your other components */}
-    </div>
-  );
+  return windowHeight;
 }
 
-export default MyComponent;
+export default getWindowHeight;
