@@ -1,24 +1,27 @@
 import { useState, useEffect } from "react";
 
-function getWindowHeight() {
+function getWindowViewport() {
   const [windowHeight, setWindowHeight] = useState(undefined);
+  const [windowWidth, setWindowWidth] = useState(undefined);
 
   useEffect(() => {
     function handleResize() {
       setWindowHeight(Math.floor(window.visualViewport.height));
+      setWindowWidth(Math.floor(window.visualViewport.width));
     }
 
     if (typeof window !== "undefined") {
       setWindowHeight(Math.floor(window.visualViewport.height));
+      setWindowWidth(Math.floor(window.visualViewport.width));
       window.addEventListener("resize", handleResize);
 
       return () => {
         window.removeEventListener("resize", handleResize);
       };
     }
-  }, [windowHeight]);
+  }, [windowHeight, windowWidth]);
 
-  return windowHeight;
+  return [windowWidth, windowHeight];
 }
 
-export default getWindowHeight;
+export default getWindowViewport;

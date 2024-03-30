@@ -2,7 +2,7 @@ import Blackjack from "../Blackjack";
 import Roulette from "../Roulette";
 import Home from "../Home";
 import styles from "./Gameplay.module.scss";
-import getWindowHeight from "../../utils/windowHeight";
+import getWindowViewport from "../../utils/windowViewport";
 import { useState } from "react";
 
 const Gameplay = ({ game }) => {
@@ -10,9 +10,12 @@ const Gameplay = ({ game }) => {
   const handleInputFocus = (value) => {
     setKeyboardActive(value);
   };
-  const windowHeight = getWindowHeight();
+  const windowViewport = getWindowViewport();
   return (
-    <div className={styles.gameplay} style={keyboardActive ? { height: windowHeight } : {}}>
+    <div
+      className={styles.gameplay}
+      style={keyboardActive && windowViewport[0] > 768 ? { height: windowViewport[1] } : {}}
+    >
       {game === "home" && <Home inputFocus={handleInputFocus} />}
       {game === "roulette" && <Roulette />}
       {game === "blackjack" && <Blackjack />}
