@@ -12,7 +12,7 @@ const Gameplay = ({ game }) => {
   };
   const windowHeight = getWindowHeight();
   return (
-    <div className={styles.gameplay} style={keyboardActive ? { height: getWindowHeight() } : {}}>
+    <div className={styles.gameplay} style={keyboardActive ? { height: windowHeight } : {}}>
       {game === "home" && <Home inputFocus={handleInputFocus} />}
       {game === "roulette" && <Roulette />}
       {game === "blackjack" && <Blackjack />}
