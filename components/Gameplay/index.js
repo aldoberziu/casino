@@ -11,7 +11,7 @@ const Gameplay = ({ game }) => {
     setKeyboardActive(value);
   };
   return (
-    <div className={`${styles.gameplay} ${keyboardActive ? styles.keyboardActive : ""}`}>
+    <div className={styles.gameplay}>
       {game === "home" && <Home inputFocus={handleInputFocus} />}
       {game === "roulette" && <Roulette />}
       {game === "blackjack" && <Blackjack />}
