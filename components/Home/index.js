@@ -5,9 +5,8 @@ import Image from "next/image";
 import { works, niceSluts, badSluts, niceCrimes, badCrimes } from "@/Constants";
 import Message from "../Message";
 import CountdownTimer from "../Countdown";
-import KeyboardDetector from "../KeyboardDetector";
 
-const Home = () => {
+const Home = (props) => {
   const sendBtn = useRef();
   const chatWindow = useRef();
   const inputRef = useRef();
@@ -19,6 +18,7 @@ const Home = () => {
   const [workTimer, setWorkTimer] = useState({ time: 0, timer: false });
   const [slutTimer, setSlutTimer] = useState({ time: 0, timer: false });
   const [crimeTimer, setCrimeTimer] = useState({ time: 0, timer: false });
+  const [inputFocus, setInputFocus] = useState(false);
 
   const getRandomNumber = (min, max) => {
     const randomDecimal = Math.random();
@@ -45,11 +45,20 @@ const Home = () => {
   useEffect(() => {
     setBalance({ ...balance, total: balance.cash + balance.bank });
   }, [balance.cash, balance.bank]);
+  useEffect(() => {
+    props?.inputFocus(inputFocus);
+  }, [inputFocus]);
 
   const handleEnter = (e) => {
     if (e.key === "Enter") {
       sendBtn.current.click();
     }
+  };
+  const handleInputFocus = () => {
+    setInputFocus(true);
+  };
+  const handleInputBlur = () => {
+    setInputFocus(false);
   };
   const handleWorkTime = (seconds) => {
     setWorkTimer({ ...workTimer, time: seconds });
@@ -262,7 +271,6 @@ const Home = () => {
           <div ref={chatWindow}></div>
         </div>
       )}
-      <KeyboardDetector />
       <CountdownTimer
         handleTimer={handleWorkTime}
         time={60}
@@ -290,6 +298,8 @@ const Home = () => {
             setInput(e.target.value);
           }}
           onClick={(e) => e.preventDefault()}
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
           onKeyDown={handleEnter}
         />
         <div

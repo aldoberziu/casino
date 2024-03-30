@@ -1,4 +1,4 @@
-.gameplay{
+.gameplay {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -10,8 +10,12 @@
   border-radius: 30px;
 }
 @media screen and (max-width: 768px) {
-  .gameplay{
+  .gameplay {
     width: 90%;
     height: 50%;
+  }
+  .keyboardActive {
+    width: 90%;
+    height: 100vh;
   }
 }
