@@ -16,7 +16,7 @@ const Gameplay = ({ game }) => {
       className={styles.gameplay}
       style={
         inputActive && windowViewport[0] < 768
-          ? { height: windowViewport[1] - 20, overflow: "hidden" }
+          ? { height: windowViewport[1] - 20, overflowY: "hidden" }
           : {}
       }
     >
