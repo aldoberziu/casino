@@ -6,15 +6,19 @@ import getWindowViewport from "../../utils/windowViewport";
 import { useState } from "react";
 
 const Gameplay = ({ game }) => {
-  const [keyboardActive, setKeyboardActive] = useState(false);
+  const [inputActive, setInputActive] = useState(false);
   const handleInputFocus = (value) => {
-    setKeyboardActive(value);
+    setInputActive(value);
   };
   const windowViewport = getWindowViewport();
   return (
     <div
       className={styles.gameplay}
-      style={keyboardActive && windowViewport[0] < 768 ? { height: windowViewport[1] } : {}}
+      style={
+        inputActive && windowViewport[0] < 768
+          ? { height: windowViewport[1] - 20, overflow: "hidden" }
+          : {}
+      }
     >
       {game === "home" && <Home inputFocus={handleInputFocus} />}
       {game === "roulette" && <Roulette />}
