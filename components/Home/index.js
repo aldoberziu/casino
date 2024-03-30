@@ -9,11 +9,10 @@ import CountdownTimer from "../Countdown";
 const Home = (props) => {
   const sendBtn = useRef();
   const chatWindow = useRef();
-  const inputRef = useRef();
+  const wrapperRef = useRef();
 
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([{ type: "", message: "", action: "" }]);
-  const [displayMessage, setDisplayMessage] = useState(true);
   const [balance, setBalance] = useState({ cash: 0, bank: 0, total: 0 });
   const [workTimer, setWorkTimer] = useState({ time: 0, timer: false });
   const [slutTimer, setSlutTimer] = useState({ time: 0, timer: false });
@@ -47,6 +46,9 @@ const Home = (props) => {
   }, [balance.cash, balance.bank]);
   useEffect(() => {
     props?.inputFocus(inputFocus);
+    if (inputFocus) {
+      wrapperRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   }, [inputFocus]);
 
   const handleEnter = (e) => {
@@ -183,7 +185,7 @@ const Home = (props) => {
           break;
       }
     } else {
-      setMessages((state) => [...state, { type: "message", message: input }]);
+      setMessages((state) => [...state, { type: "message", message: input, action: "message" }]);
     }
     if (input.startsWith("!dep")) {
       switch (input) {
@@ -262,15 +264,13 @@ const Home = (props) => {
   }, [messages]);
 
   return (
-    <div className={styles.wrapper}>
-      {displayMessage && (
-        <div className={styles.chatMessages}>
-          {messages.map((el) => (
-            <Message data={el} />
-          ))}
-          <div ref={chatWindow}></div>
-        </div>
-      )}
+    <div className={styles.wrapper} ref={wrapperRef}>
+      <div className={styles.chatMessages}>
+        {messages.map((el) => (
+          <Message data={el} />
+        ))}
+        <div ref={chatWindow}></div>
+      </div>
       <CountdownTimer
         handleTimer={handleWorkTime}
         time={60}
@@ -303,7 +303,7 @@ const Home = (props) => {
           onKeyDown={handleEnter}
         />
         <div
-          className={`${styles.sendMessage} ${displayMessage ? styles.disabled : ""}`}
+          className={styles.sendMessage}
           ref={sendBtn}
           onClick={() => {
             handleSubmit();
