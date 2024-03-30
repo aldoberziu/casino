@@ -5,11 +5,11 @@ function MyComponent() {
 
   useEffect(() => {
     function handleResize() {
-      setWindowHeight(window.innerHeight);
+      setWindowHeight(Math.floor(window.visualViewport.height));
     }
 
     if (typeof window !== "undefined") {
-      setWindowHeight(window.innerHeight);
+      setWindowHeight(Math.floor(window.visualViewport.height));
       window.addEventListener("resize", handleResize);
 
       return () => {
