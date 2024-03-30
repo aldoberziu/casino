@@ -21,9 +21,12 @@ const Message = ({ data }) => {
         <div className={styles.container}>
           <div className={styles.username}>
             <p>{data.type !== "message" ? "Casino Tajvani ✔️" : "user_name"}</p>
-            <p className={styles.action}>
-              used<span>{data.action !== "" ? `${data.action}` : ""}</span>
-            </p>
+            {data.action !== "message" && (
+              <p className={styles.action}>
+                used
+                <span>{data.action !== "" ? `${data.action}` : ""}</span>
+              </p>
+            )}
           </div>
           <div className={styles.text}>
             <p>{data.message}</p>
