@@ -62,24 +62,6 @@ const Home = (props) => {
   const handleInputBlur = () => {
     setInputFocus(false);
   };
-  const handleWorkTime = (seconds) => {
-    setWorkTimer({ ...workTimer, time: seconds });
-  };
-  const childWorkTimer = (value) => {
-    setWorkTimer({ ...workTimer, timer: value });
-  };
-  const handleSlutTimer = (seconds) => {
-    setSlutTimer({ ...slutTimer, time: seconds });
-  };
-  const childSlutTimer = (value) => {
-    setSlutTimer({ ...slutTimer, timer: value });
-  };
-  const handleCrimeTimer = (seconds) => {
-    setCrimeTimer({ ...crimeTimer, time: seconds });
-  };
-  const childCrimeTimer = (value) => {
-    setCrimeTimer({ ...crimeTimer, timer: value });
-  };
   const handleSubmit = () => {
     if (input.startsWith("!")) {
       switch (input) {
@@ -178,7 +160,7 @@ const Home = (props) => {
             ...state,
             {
               type: "bot",
-              message: `Cash Balance: ${balance.cash}.\nBank Balance: ${balance.bank}.\nTotal Balance: ${balance.total}`,
+              message: `Cash Balance: ${balance.cash}💸\nBank Balance: ${balance.bank}💸\nTotal Balance: ${balance.total}💸`,
               action: "/balance",
             },
           ]);
@@ -212,16 +194,15 @@ const Home = (props) => {
               },
             ]);
           } else {
-            setBalance({ ...balance, bank: balance.bank + balance.cash });
             setMessages((state) => [
               ...state,
               {
                 type: "bot",
-                message: `Successfully deposited ${balance.cash} to your bank!`,
+                message: `Successfully deposited ${balance.cash}💸 to your bank!`,
                 action: "/deposit",
               },
             ]);
-            setBalance({ ...balance, cash: 0 });
+            setBalance({ ...balance, bank: balance.bank + balance.cash, cash: 0 });
           }
           break;
         default:
@@ -245,16 +226,84 @@ const Home = (props) => {
               },
             ]);
           } else {
-            setBalance({ ...balance, bank: balance.bank + parseInt(coins) });
             setMessages((state) => [
               ...state,
               {
                 type: "bot",
-                message: `Successfully deposited ${coins} to your bank!`,
+                message: `Successfully deposited ${coins}💸 to your bank!`,
                 action: "/deposit",
               },
             ]);
-            setBalance({ ...balance, cash: 0 });
+            setBalance({ ...balance, bank: balance.bank + parseInt(coins), cash: 0 });
+          }
+      }
+    }
+    if (input.startsWith("!with")) {
+      switch (input) {
+        case "!with":
+        case "!withdraw":
+          setMessages((state) => [
+            ...state,
+            {
+              type: "error",
+              message: "Invalid number or arguments. Use !with <amount>",
+              action: "/withdraw",
+            },
+          ]);
+          break;
+        case "!with all":
+        case "!withdraw all":
+          if (balance.bank <= 0) {
+            setMessages((state) => [
+              ...state,
+              {
+                type: "bot",
+                message: `There was no money left in the bank to withdraw. Currently you have ${balance.bank}`,
+                action: "/withdraw",
+              },
+            ]);
+          } else {
+            setMessages((state) => [
+              ...state,
+              {
+                type: "bot",
+                message: `Successfully withdrew ${balance.bank}💸 from the bank!`,
+                action: "/withdraw",
+              },
+            ]);
+            setBalance({ ...balance, cash: balance.cash + balance.bank, bank: 0 });
+          }
+          break;
+        default:
+          const coins = input.replace(/\D/g, "");
+          if (coins === "") {
+            setMessages((state) => [
+              ...state,
+              {
+                type: "error",
+                message: "Invalid arguments. Use !with <amount>",
+                action: "/withdraw",
+              },
+            ]);
+          } else if (coins > balance.bank) {
+            setMessages((state) => [
+              ...state,
+              {
+                type: "error",
+                message: `You cannot withdraw more than you have in the bank! Currently you have ${balance.bank}`,
+                action: "/withdraw",
+              },
+            ]);
+          } else {
+            setMessages((state) => [
+              ...state,
+              {
+                type: "bot",
+                message: `Successfully withdrew ${coins}💸 from the bank!`,
+                action: "/withdraw",
+              },
+            ]);
+            setBalance({ ...balance, bank: balance.bank - parseInt(coins), cash: parseInt(coins) });
           }
       }
     }
@@ -272,22 +321,34 @@ const Home = (props) => {
         <div ref={chatWindow}></div>
       </div>
       <CountdownTimer
-        handleTimer={handleWorkTime}
+        handleTimer={(seconds) => {
+          setWorkTimer({ ...workTimer, time: seconds });
+        }}
         time={60}
         timer={workTimer.timer}
-        childTimer={childWorkTimer}
+        childTimer={(value) => {
+          setWorkTimer({ ...workTimer, timer: value });
+        }}
       />
       <CountdownTimer
-        handleTimer={handleSlutTimer}
+        handleTimer={(seconds) => {
+          setSlutTimer({ ...slutTimer, time: seconds });
+        }}
         time={60}
         timer={slutTimer.timer}
-        childTimer={childSlutTimer}
+        childTimer={(value) => {
+          setSlutTimer({ ...slutTimer, timer: value });
+        }}
       />
       <CountdownTimer
-        handleTimer={handleCrimeTimer}
+        handleTimer={(seconds) => {
+          setCrimeTimer({ ...crimeTimer, time: seconds });
+        }}
         time={120}
         timer={crimeTimer.timer}
-        childTimer={childCrimeTimer}
+        childTimer={(value) => {
+          setCrimeTimer({ ...crimeTimer, timer: value });
+        }}
       />
       <div className={styles.inputSection}>
         <input
